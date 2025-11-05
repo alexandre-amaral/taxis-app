@@ -93,18 +93,12 @@ const App: React.FC = () => {
     setError(null);
 
     try {
-      console.log('🔐 Requesting login code for:', email);
       const code = generateCode();
-      console.log('🎲 Generated code:', code);
-
       await storeAuthCode(email, code);
       await sendCodeEmail(email, code);
-
       setPendingEmail(email);
-
-      console.log('✉️ Code sent! Check console for the code.');
     } catch (err: any) {
-      console.error('❌ Error requesting login code:', err);
+      console.error('Error requesting login code:', err);
       setError(err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)\.?/, ''));
     } finally {
       setIsLoading(false);
@@ -119,21 +113,16 @@ const App: React.FC = () => {
     setError(null);
 
     try {
-      console.log('🔍 Verifying code:', code, 'for email:', pendingEmail);
       const isValid = await verifyAuthCode(pendingEmail, code);
 
       if (!isValid) {
-        console.error('❌ Invalid or expired code');
         setError('Invalid or expired code. Please try again.');
         return;
       }
 
-      console.log('✅ Code verified! Authenticating...');
-
       // Sign in anonymously first
       const anonResult = await signInAnonymously(auth);
       const firebaseUser = anonResult.user;
-      console.log('🔐 Anonymous auth successful:', firebaseUser.uid);
 
       // Create or update user document
       const userDocRef = doc(db, 'users', firebaseUser.uid);
@@ -147,15 +136,12 @@ const App: React.FC = () => {
           preferences: null,
         };
         await setDoc(userDocRef, newUser);
-        console.log('📝 User document created');
       }
 
       // Clean up
       setPendingEmail(null);
-      console.log('🎉 Login successful!');
-
     } catch (err: any) {
-      console.error('❌ Error during verification:', err);
+      console.error('Error during verification:', err);
       setError(err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)\.?/, ''));
     } finally {
       setIsLoading(false);

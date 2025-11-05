@@ -18,8 +18,6 @@ interface SendLoginCodeResponse {
 
 export const sendCodeEmail = async (email: string, code: string): Promise<void> => {
   try {
-    console.log('📧 Sending email via Netlify Function...');
-
     // Call Netlify Function via HTTP
     const response = await fetch(FUNCTION_URL, {
       method: 'POST',
@@ -36,17 +34,15 @@ export const sendCodeEmail = async (email: string, code: string): Promise<void> 
 
     const result = await response.json();
 
-    if (result.success) {
-      console.log('%c✅ Email sent successfully!', 'color: #00ffff; font-size: 14px; font-weight: bold;');
-      console.log('Message ID:', result.messageId);
-    } else {
+    if (!result.success) {
       throw new Error('Failed to send email');
     }
   } catch (error: any) {
-    console.error('❌ Error sending email:', error);
+    console.error('Error sending email:', error);
 
-    // Fallback: Show code in console for development
-    console.log(`
+    // Fallback: Show code in console for development only
+    if (!import.meta.env.PROD) {
+      console.log(`
 ╔═══════════════════════════════════════════════╗
 ║         TAXIS LOGIN CODE (FALLBACK)           ║
 ╠═══════════════════════════════════════════════╣
@@ -54,8 +50,8 @@ export const sendCodeEmail = async (email: string, code: string): Promise<void> 
 ║  Code:  ${code.padEnd(37)}║
 ║  Expires in: 5 minutes                        ║
 ╚═══════════════════════════════════════════════╝
-    `);
-    console.log('%c⚠️ Email service unavailable. Using console fallback.', 'color: #ffaa00; font-size: 12px;');
+      `);
+    }
 
     // Don't throw error - allow login to continue with console code
   }

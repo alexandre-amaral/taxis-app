@@ -34,33 +34,25 @@ export const storeAuthCode = async (email: string, code: string): Promise<void> 
   // Use email as document ID (only one active code per email)
   const docRef = doc(db, AUTH_CODES_COLLECTION, email.toLowerCase());
 
-  console.log('📝 Storing auth code for:', email.toLowerCase());
   await setDoc(docRef, authCode);
-  console.log('✅ Auth code stored successfully');
 };
 
 /**
  * Verify auth code
  */
 export const verifyAuthCode = async (email: string, code: string): Promise<boolean> => {
-  console.log('🔍 Verifying auth code for:', email.toLowerCase());
   const docRef = doc(db, AUTH_CODES_COLLECTION, email.toLowerCase());
   const docSnap = await getDoc(docRef);
 
   if (!docSnap.exists()) {
-    console.error('❌ No auth code found for this email');
     return false;
   }
 
   const authCode = docSnap.data() as AuthCode;
   const now = Date.now();
 
-  console.log('📋 Found code:', authCode.code, 'Provided:', code);
-  console.log('⏰ Expires at:', new Date(authCode.expiresAt), 'Now:', new Date(now));
-
   // Check if code matches and hasn't expired
   if (authCode.code === code && authCode.expiresAt > now) {
-    console.log('✅ Code is valid! Deleting code...');
     // Delete the code after successful verification (one-time use)
     await deleteDoc(docRef);
     return true;
@@ -68,10 +60,7 @@ export const verifyAuthCode = async (email: string, code: string): Promise<boole
 
   // Delete expired code
   if (authCode.expiresAt <= now) {
-    console.warn('⏰ Code has expired. Deleting...');
     await deleteDoc(docRef);
-  } else {
-    console.error('❌ Code mismatch');
   }
 
   return false;
