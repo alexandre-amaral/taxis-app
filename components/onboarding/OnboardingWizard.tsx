@@ -155,7 +155,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           boxShadow: '0 0 20px rgba(0, 255, 255, 0.08)',
           animation: 'fadeIn 0.3s ease-in'
         }}>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2" style={{ color: '#00ffff' }}>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 font-display" style={{ color: '#00ffff' }}>
               Welcome to Taxis
             </h1>
             <p className="text-center text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">
@@ -193,190 +193,136 @@ const CategorySubcategoryStep = ({
 }: any) => {
   return (
     <div className="animate-fadeIn">
-      <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-center" style={{ color: '#00ffff' }}>
+      <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-center font-display" style={{ color: '#00ffff' }}>
         Select Categories & Subcategories
       </h2>
-      <p className="text-gray-400 mb-4 sm:mb-6 text-center text-sm sm:text-base px-2">
-        Choose categories from the left, then select specific topics and rate their importance (1-5) on the right.
+      <p className="text-gray-400 mb-4 text-center text-sm px-2">
+        Click on categories to expand and select subcategories. Set priorities with sliders.
       </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        {/* Left Panel: Available Categories */}
-        <div className="bg-gray-700/50 rounded-lg p-3 sm:p-4" style={{ border: '1px solid rgba(0, 255, 255, 0.2)' }}>
-          <h3 className="text-base sm:text-lg font-semibold mb-3 flex items-center gap-2" style={{ color: '#00ffff' }}>
-            <span className="h-1 w-6 rounded" style={{ backgroundColor: '#00ffff' }}></span>
-            Available Categories
-          </h3>
-          <div className="space-y-2">
-            {CATEGORIES_WITH_SUBCATEGORIES.map(({ name: category }) => {
-              const isSelected = selectedCategories.includes(category);
+      {/* Grid of Category Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[60vh] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: '#00ffff #1f2937' }}>
+        {CATEGORIES_WITH_SUBCATEGORIES.map(({ name: category, subcategories }) => {
+          const isSelected = selectedCategories.includes(category);
+          const categoryWeight = categoryInterests[category]?.weight || 3;
+          const selectedSubcats = categoryInterests[category]?.subcategories || {};
+          const selectedSubcatCount = Object.keys(selectedSubcats).length;
 
-              return (
-                <button
-                  key={category}
-                  onClick={() => onCategoryToggle(category)}
-                  className="w-full flex items-center justify-between p-2.5 sm:p-3 rounded-lg transition-all duration-200 hover:shadow-lg active:scale-95"
-                  style={{
-                    backgroundColor: isSelected ? 'rgba(0, 255, 255, 0.15)' : 'rgba(0, 255, 255, 0.05)',
-                    border: isSelected ? '2px solid rgba(0, 255, 255, 0.4)' : '1px solid rgba(0, 255, 255, 0.2)',
-                    boxShadow: isSelected ? '0 0 10px rgba(0, 255, 255, 0.15)' : 'none'
-                  }}
-                >
-                  <div className="flex items-center space-x-2 sm:space-x-3">
+          return (
+            <div
+              key={category}
+              className="rounded-lg transition-all duration-300 overflow-hidden"
+              style={{
+                backgroundColor: isSelected ? 'rgba(0, 255, 255, 0.08)' : 'rgba(0, 255, 255, 0.03)',
+                border: isSelected ? '2px solid rgba(0, 255, 255, 0.4)' : '1px solid rgba(0, 255, 255, 0.15)',
+                boxShadow: isSelected ? '0 0 12px rgba(0, 255, 255, 0.15)' : 'none'
+              }}
+            >
+              {/* Category Header - Always Visible */}
+              <button
+                onClick={() => onCategoryToggle(category)}
+                className="w-full p-3 text-left transition-all active:scale-98 hover:bg-white/5"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
                     <div
-                      className="w-5 h-5 sm:w-6 sm:h-6 rounded border-2 flex items-center justify-center transition-all duration-200 shrink-0"
+                      className="w-5 h-5 rounded border-2 flex items-center justify-center transition-all shrink-0"
                       style={{
                         borderColor: isSelected ? '#00ffff' : 'rgba(255, 255, 255, 0.3)',
-                        backgroundColor: isSelected ? '#00ffff' : 'transparent',
-                        boxShadow: isSelected ? '0 0 6px rgba(0, 255, 255, 0.3)' : 'none'
+                        backgroundColor: isSelected ? '#00ffff' : 'transparent'
                       }}
                     >
-                      {isSelected && <span className="text-black font-bold text-xs sm:text-sm">✓</span>}
+                      {isSelected && <span className="text-black font-bold text-xs">✓</span>}
                     </div>
-                    <span className="text-sm sm:text-base font-bold text-left" style={{ color: isSelected ? '#00ffff' : '#fff' }}>
+                    <span className="text-sm font-bold" style={{ color: isSelected ? '#00ffff' : '#fff' }}>
                       {category}
                     </span>
                   </div>
-                  {isSelected && (
-                    <span className="text-xs px-2 py-1 rounded font-semibold shrink-0" style={{ backgroundColor: 'rgba(0, 255, 255, 0.2)', color: '#00ffff' }}>
-                      →
+                  {isSelected && selectedSubcatCount > 0 && (
+                    <span className="text-xs px-2 py-0.5 rounded font-semibold" style={{ backgroundColor: 'rgba(0, 255, 255, 0.2)', color: '#00ffff' }}>
+                      {selectedSubcatCount}/{subcategories.length}
                     </span>
                   )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+                </div>
 
-        {/* Right Panel: Selected Categories with Subcategories */}
-        <div className="bg-gray-700/50 rounded-lg p-3 sm:p-4" style={{ border: '1px solid rgba(0, 255, 255, 0.2)' }}>
-          <h3 className="text-base sm:text-lg font-semibold mb-3 flex items-center gap-2" style={{ color: '#00ffff' }}>
-            <span className="h-1 w-6 rounded" style={{ backgroundColor: '#00ffff' }}></span>
-            Selected Categories ({selectedCategories.length})
-          </h3>
+                {/* Category Weight Slider - Show when selected */}
+                {isSelected && (
+                  <div className="flex items-center gap-1 mt-2" onClick={(e) => e.stopPropagation()}>
+                    <span className="text-[9px] text-gray-500 w-7">Low</span>
+                    <input
+                      type="range"
+                      min="1"
+                      max="5"
+                      value={categoryWeight}
+                      onChange={(e) => onCategoryWeightChange(category, parseInt(e.target.value))}
+                      className="flex-1 h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                      style={{ accentColor: '#00ffff' }}
+                    />
+                    <span className="text-[9px] text-gray-500 w-8">High</span>
+                    <span className="text-xs font-bold w-3" style={{ color: '#00ffff' }}>
+                      {categoryWeight}
+                    </span>
+                  </div>
+                )}
+              </button>
 
-          {selectedCategories.length === 0 ? (
-            <div className="flex items-center justify-center min-h-[200px] text-center">
-              <p className="text-sm text-gray-500 italic px-4">
-                Select categories from the left panel to configure their subcategories here
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {selectedCategories.map(category => {
-                const categoryData = CATEGORIES_WITH_SUBCATEGORIES.find(c => c.name === category);
-                const categoryWeight = categoryInterests[category]?.weight || 3;
-                const selectedSubcats = categoryInterests[category]?.subcategories || {};
+              {/* Subcategories - Show when selected */}
+              {isSelected && (
+                <div className="px-3 pb-3 space-y-1 border-t border-cyan-500/20 pt-2" onClick={(e) => e.stopPropagation()}>
+                  {subcategories.map((subcategory: string) => {
+                    const isSubSelected = !!selectedSubcats[subcategory];
+                    const weight = selectedSubcats[subcategory]?.weight || 3;
 
-                return (
-                  <div
-                    key={category}
-                    className="bg-gray-800 rounded-lg p-3 animate-fadeIn"
-                    style={{
-                      border: '1px solid rgba(0, 255, 255, 0.3)',
-                      boxShadow: '0 0 10px rgba(0, 255, 255, 0.08)'
-                    }}
-                  >
-                    {/* Category Header */}
-                    <div className="mb-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-sm sm:text-base font-bold" style={{ color: '#00ffff' }}>{category}</h4>
+                    return (
+                      <div key={subcategory} className="animate-fadeIn">
                         <button
-                          onClick={() => onCategoryToggle(category)}
-                          className="text-xs px-2 py-1 rounded hover:bg-red-500/20 transition-colors"
-                          style={{ color: '#ff5555' }}
+                          onClick={() => onSubcategoryToggle(category, subcategory)}
+                          className="flex items-center gap-1.5 w-full text-left p-1.5 rounded transition-all hover:bg-white/5"
+                          style={{
+                            backgroundColor: isSubSelected ? 'rgba(0, 255, 255, 0.1)' : 'transparent'
+                          }}
                         >
-                          Remove
-                        </button>
-                      </div>
-
-                      {/* Category Weight */}
-                      <div className="mb-2">
-                        <label className="block text-[10px] sm:text-xs text-gray-400 mb-1">Overall Priority</label>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-gray-500 shrink-0">Low</span>
-                          <input
-                            type="range"
-                            min="1"
-                            max="5"
-                            value={categoryWeight}
-                            onChange={(e) => onCategoryWeightChange(category, parseInt(e.target.value))}
-                            className="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                            style={{ accentColor: '#00ffff' }}
-                          />
-                          <span className="text-[10px] text-gray-500 shrink-0">High</span>
-                          <span className="text-sm font-bold shrink-0" style={{ color: '#00ffff', minWidth: '15px' }}>
-                            {categoryWeight}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Subcategories */}
-                    <div className="space-y-1.5">
-                      <p className="text-[10px] sm:text-xs text-gray-400 mb-2">
-                        Subcategories ({Object.keys(selectedSubcats).length}/{categoryData?.subcategories.length || 0})
-                      </p>
-                      {categoryData?.subcategories.map((subcategory: string) => {
-                        const isSubSelected = !!selectedSubcats[subcategory];
-                        const weight = selectedSubcats[subcategory]?.weight || 3;
-
-                        return (
                           <div
-                            key={subcategory}
-                            className="p-1.5 sm:p-2 rounded-md transition-all duration-200"
+                            className="w-3 h-3 rounded border flex items-center justify-center transition-all shrink-0"
                             style={{
-                              backgroundColor: isSubSelected ? 'rgba(0, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.2)',
-                              border: isSubSelected ? '1px solid rgba(0, 255, 255, 0.3)' : '1px solid rgba(255, 255, 255, 0.05)'
+                              borderColor: isSubSelected ? '#00ffff' : 'rgba(255, 255, 255, 0.3)',
+                              backgroundColor: isSubSelected ? '#00ffff' : 'transparent'
                             }}
                           >
-                            <button
-                              onClick={() => onSubcategoryToggle(category, subcategory)}
-                              className="flex items-center space-x-2 w-full text-left active:scale-95 transition-transform"
-                            >
-                              <div
-                                className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border flex items-center justify-center transition-all duration-200 shrink-0"
-                                style={{
-                                  borderColor: isSubSelected ? '#00ffff' : 'rgba(255, 255, 255, 0.3)',
-                                  backgroundColor: isSubSelected ? '#00ffff' : 'transparent',
-                                  boxShadow: isSubSelected ? '0 0 4px rgba(0, 255, 255, 0.3)' : 'none'
-                                }}
-                              >
-                                {isSubSelected && <span className="text-black font-bold text-[10px]">✓</span>}
-                              </div>
-                              <span className="text-xs sm:text-sm" style={{ color: isSubSelected ? '#00ffff' : '#d1d5db' }}>
-                                {subcategory}
-                              </span>
-                            </button>
-
-                            {isSubSelected && (
-                              <div className="flex items-center justify-between mt-1.5 ml-5 sm:ml-6 gap-1 animate-fadeIn">
-                                <span className="text-[10px] text-gray-500 shrink-0">Low</span>
-                                <input
-                                  type="range"
-                                  min="1"
-                                  max="5"
-                                  value={weight}
-                                  onChange={(e) => onSubcategoryWeightChange(category, subcategory, parseInt(e.target.value))}
-                                  className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                                  style={{ accentColor: '#00ffff' }}
-                                />
-                                <span className="text-[10px] text-gray-500 shrink-0">High</span>
-                                <span className="ml-1 text-xs font-semibold shrink-0" style={{ color: '#00ffff', minWidth: '12px' }}>
-                                  {weight}
-                                </span>
-                              </div>
-                            )}
+                            {isSubSelected && <span className="text-black font-bold text-[8px]">✓</span>}
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
+                          <span className="text-xs flex-1" style={{ color: isSubSelected ? '#00ffff' : '#d1d5db' }}>
+                            {subcategory}
+                          </span>
+                        </button>
+
+                        {/* Subcategory Weight */}
+                        {isSubSelected && (
+                          <div className="flex items-center gap-1 mt-1 ml-4 animate-fadeIn">
+                            <span className="text-[8px] text-gray-500 w-6">Low</span>
+                            <input
+                              type="range"
+                              min="1"
+                              max="5"
+                              value={weight}
+                              onChange={(e) => onSubcategoryWeightChange(category, subcategory, parseInt(e.target.value))}
+                              className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                              style={{ accentColor: '#00ffff' }}
+                            />
+                            <span className="text-[8px] text-gray-500 w-6">High</span>
+                            <span className="text-[10px] font-semibold w-2" style={{ color: '#00ffff' }}>
+                              {weight}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          );
+        })}
       </div>
 
       <button
@@ -409,39 +355,82 @@ const CategorySubcategoryStep = ({
 const SourceStep = ({ selectedSources, onSourceToggle, onNext, onBack }: any) => {
   const categories = Array.from(new Set(CONTENT_SOURCES.map(s => s.category)));
 
+  const handleSelectAllCategory = (category: string) => {
+    const categorySources = CONTENT_SOURCES.filter(s => s.category === category);
+    const allSelected = categorySources.every(s => selectedSources.includes(s.id));
+
+    categorySources.forEach(source => {
+      if (allSelected) {
+        // Deselect all if all are selected
+        if (selectedSources.includes(source.id)) {
+          onSourceToggle(source.id);
+        }
+      } else {
+        // Select all if not all are selected
+        if (!selectedSources.includes(source.id)) {
+          onSourceToggle(source.id);
+        }
+      }
+    });
+  };
+
   return (
     <div className="animate-fadeIn">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-center" style={{ color: '#00ffff' }}>Your Sources</h2>
-        <p className="text-gray-400 mb-4 sm:mb-6 text-center text-sm sm:text-base px-2">Select the sources you trust and want to follow.</p>
-        <div className="space-y-4 sm:space-y-5">
-            {categories.map(category => (
-                <div key={category} className="animate-fadeIn">
-                    <h3 className="text-base sm:text-xl font-semibold mb-2 sm:mb-3 flex items-center gap-2" style={{ color: '#00ffff' }}>
-                      <span className="h-1 w-8 rounded" style={{ backgroundColor: '#00ffff' }}></span>
-                      {category}
-                    </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                        {CONTENT_SOURCES.filter(s => s.category === category).map(source => (
+        <h2 className="text-xl sm:text-2xl font-semibold mb-2 text-center font-display" style={{ color: '#00ffff' }}>Your Sources</h2>
+        <p className="text-gray-400 mb-4 text-center text-sm px-2">Select the sources you trust and want to follow.</p>
+
+        <div className="max-h-[58vh] overflow-y-auto pr-2 space-y-3" style={{ scrollbarWidth: 'thin', scrollbarColor: '#00ffff #1f2937' }}>
+            {categories.map(category => {
+              const categorySources = CONTENT_SOURCES.filter(s => s.category === category);
+              const selectedInCategory = categorySources.filter(s => selectedSources.includes(s.id)).length;
+              const allSelected = selectedInCategory === categorySources.length;
+
+              return (
+                <div key={category} className="bg-gray-700/30 rounded-lg p-3 animate-fadeIn" style={{ border: '1px solid rgba(0, 255, 255, 0.15)' }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: '#00ffff' }}>
+                        <span className="h-1 w-6 rounded" style={{ backgroundColor: '#00ffff' }}></span>
+                        {category}
+                        <span className="text-xs font-normal text-gray-400">
+                          ({selectedInCategory}/{categorySources.length})
+                        </span>
+                      </h3>
+                      <button
+                        onClick={() => handleSelectAllCategory(category)}
+                        className="text-xs px-2 py-1 rounded transition-all hover:scale-105"
+                        style={{
+                          backgroundColor: allSelected ? 'rgba(255, 85, 85, 0.2)' : 'rgba(0, 255, 255, 0.2)',
+                          color: allSelected ? '#ff5555' : '#00ffff',
+                          border: `1px solid ${allSelected ? 'rgba(255, 85, 85, 0.3)' : 'rgba(0, 255, 255, 0.3)'}`
+                        }}
+                      >
+                        {allSelected ? 'Deselect All' : 'Select All'}
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1.5">
+                        {categorySources.map(source => (
                             <button
                                 key={source.id}
                                 onClick={() => onSourceToggle(source.id)}
-                                className="p-2 text-xs sm:text-sm rounded-md transition-all duration-200 active:scale-95 hover:shadow-lg font-medium"
+                                className="p-2 text-xs rounded transition-all duration-200 active:scale-95 font-medium truncate"
                                 style={{
-                                  backgroundColor: selectedSources.includes(source.id) ? '#00ffff' : 'rgba(0, 255, 255, 0.1)',
+                                  backgroundColor: selectedSources.includes(source.id) ? '#00ffff' : 'rgba(0, 255, 255, 0.05)',
                                   color: selectedSources.includes(source.id) ? '#0a0a0a' : '#00ffff',
-                                  border: '1px solid rgba(0, 255, 255, 0.3)',
-                                  boxShadow: selectedSources.includes(source.id) ? '0 0 8px rgba(0, 255, 255, 0.3)' : 'none'
+                                  border: '1px solid rgba(0, 255, 255, 0.2)',
+                                  boxShadow: selectedSources.includes(source.id) ? '0 0 6px rgba(0, 255, 255, 0.2)' : 'none'
                                 }}
+                                title={source.name}
                             >
                                 {source.name}
                             </button>
                         ))}
                     </div>
                 </div>
-            ))}
+              );
+            })}
         </div>
         {selectedSources.length > 0 && (
-          <p className="text-center text-xs sm:text-sm mt-3 sm:mt-4 text-gray-400">
+          <p className="text-center text-xs mt-3 text-gray-400">
             <span className="font-semibold" style={{ color: '#00ffff' }}>{selectedSources.length}</span> sources selected
           </p>
         )}
@@ -495,7 +484,7 @@ const KeywordStep = ({ keywords, setKeywords, onFinish, onBack }: any) => {
 
   return (
     <div className="animate-fadeIn">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-center" style={{ color: '#00ffff' }}>Key Topics & People</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-center font-display" style={{ color: '#00ffff' }}>Key Topics & People</h2>
         <p className="text-gray-400 mb-4 sm:mb-6 text-center text-sm sm:text-base px-2">
           Enter comma-separated keywords, companies, or people you want to track closely.
         </p>
