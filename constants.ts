@@ -4,6 +4,7 @@ import { ContentSource } from './types';
 export const CATEGORIES = [
   'Technology',
   'News',
+  'Brazilian News',
   'Politics',
   'Finance',
   'Science',
@@ -35,6 +36,17 @@ export const CATEGORIES_WITH_SUBCATEGORIES: CategoryWithSubcategories[] = [
       'Investigative Journalism',
       'Human Interest',
       'Environment & Climate'
+    ]
+  },
+  {
+    name: 'Brazilian News',
+    subcategories: [
+      'National News',
+      'Politics & Government',
+      'Economy & Business',
+      'Crime & Public Safety',
+      'Culture & Entertainment',
+      'Sports'
     ]
   },
   {
@@ -170,27 +182,55 @@ export const CONTENT_SOURCES: ContentSource[] = [
     type: 'rss',
     category: 'Politics',
   },
-  // News - Brazil
+  // Brazilian News
   {
     id: 'g1',
     name: 'G1',
     url: 'https://g1.globo.com/rss/g1/',
     type: 'rss',
-    category: 'News',
+    category: 'Brazilian News',
   },
   {
     id: 'uol-noticias',
     name: 'UOL Notícias',
     url: 'https://rss.uol.com.br/feed/noticias.xml',
     type: 'rss',
-    category: 'News',
+    category: 'Brazilian News',
   },
   {
     id: 'folha',
     name: 'Folha de S.Paulo',
     url: 'https://www1.folha.uol.com.br/rss/emcimadahora.xml',
     type: 'rss',
-    category: 'News',
+    category: 'Brazilian News',
+  },
+  {
+    id: 'estadao',
+    name: 'Estadão',
+    url: 'https://www.estadao.com.br/rss/ultimasnoticias.xml',
+    type: 'rss',
+    category: 'Brazilian News',
+  },
+  {
+    id: 'veja',
+    name: 'Veja',
+    url: 'https://veja.abril.com.br/feed/',
+    type: 'rss',
+    category: 'Brazilian News',
+  },
+  {
+    id: 'exame',
+    name: 'Exame',
+    url: 'https://exame.com/feed/',
+    type: 'rss',
+    category: 'Brazilian News',
+  },
+  {
+    id: 'oglobo',
+    name: 'O Globo',
+    url: 'https://oglobo.globo.com/rss.xml',
+    type: 'rss',
+    category: 'Brazilian News',
   },
   // Finance - International
   {
