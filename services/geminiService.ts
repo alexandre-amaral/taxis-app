@@ -1,7 +1,10 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { UserPreferences, Article, AIAnalysis, ContentSource } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Use import.meta.env for Vite, fallback to process.env for compatibility
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' ? process.env.API_KEY : undefined);
+
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 
 const analysisSchema = {
