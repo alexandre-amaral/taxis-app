@@ -1,20 +1,33 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Taxis
 
-# Run and deploy your AI Studio app
+> Your Personal Intelligence Analyst
 
-This contains everything you need to run your app locally.
+AI-powered news aggregation that transforms RSS feeds into verified, personalized intelligence briefings.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1NUsdwOjJSKYGkojBXyKVyr18Der9StmV
+## Features
 
-## Run Locally
+- Smart feed with AI analysis and fact-checking
+- 48-hour news filter with auto-refresh
+- Presidential-style daily briefings
+- Topic dashboards with real-time web search
+- Multi-perspective summaries
 
-**Prerequisites:**  Node.js
+## Tech Stack
 
+React 19 · TypeScript · Tailwind CSS · Firebase · Google Gemini AI
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Quick Start
+
+```bash
+npm install
+# Add VITE_GEMINI_API_KEY to .env.local
+npm run dev
+```
+
+## Deploy
+
+Configured for Netlify. Set `VITE_GEMINI_API_KEY` in environment variables.
+
+```bash
+git push origin main
+```

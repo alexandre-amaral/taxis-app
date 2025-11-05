@@ -1134,7 +1134,7 @@ const Feed: React.FC<FeedProps> = ({ userPreferences }) => {
               {perspectives.map((perspective: any, idx: number) => (
                 <div key={idx} className="bg-gray-900/50 p-4 rounded-lg border border-indigo-500/10">
                   <h4 className="font-semibold text-indigo-300 mb-2">{perspective.viewpoint}</h4>
-                  <p className="text-sm text-gray-400">{p.summary}</p>
+                  <p className="text-sm text-gray-400">{perspective.summary}</p>
                 </div>
               ))}
             </div>
