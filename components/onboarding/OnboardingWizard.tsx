@@ -200,8 +200,8 @@ const CategorySubcategoryStep = ({
         Click on categories to expand and select subcategories. Set priorities with sliders.
       </p>
 
-      {/* Grid of Category Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[60vh] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: '#00ffff #1f2937' }}>
+      {/* Category Cards */}
+      <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: '#00ffff #1f2937' }}>
         {CATEGORIES_WITH_SUBCATEGORIES.map(({ name: category, subcategories }) => {
           const isSelected = selectedCategories.includes(category);
           const categoryWeight = categoryInterests[category]?.weight || 3;
@@ -268,7 +268,7 @@ const CategorySubcategoryStep = ({
 
               {/* Subcategories - Show when selected */}
               {isSelected && (
-                <div className="px-3 pb-3 space-y-1 border-t border-cyan-500/20 pt-2 max-h-40 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#00ffff #1f2937' }} onClick={(e) => e.stopPropagation()}>
+                <div className="px-3 pb-3 space-y-1 border-t border-cyan-500/20 pt-2" onClick={(e) => e.stopPropagation()}>
                   {subcategories.map((subcategory: string) => {
                     const isSubSelected = !!selectedSubcats[subcategory];
                     const weight = selectedSubcats[subcategory]?.weight || 3;
