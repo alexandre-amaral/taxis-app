@@ -268,7 +268,7 @@ const CategorySubcategoryStep = ({
 
               {/* Subcategories - Show when selected */}
               {isSelected && (
-                <div className="px-3 pb-3 space-y-1 border-t border-cyan-500/20 pt-2" onClick={(e) => e.stopPropagation()}>
+                <div className="px-3 pb-3 space-y-1 border-t border-cyan-500/20 pt-2 max-h-40 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#00ffff #1f2937' }} onClick={(e) => e.stopPropagation()}>
                   {subcategories.map((subcategory: string) => {
                     const isSubSelected = !!selectedSubcats[subcategory];
                     const weight = selectedSubcats[subcategory]?.weight || 3;
