@@ -1,9 +1,9 @@
-const { Resend } = require('resend');
+import { Resend } from 'resend';
 
 // Initialize Resend with API key from environment variable
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   // Enable CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
