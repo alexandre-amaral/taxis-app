@@ -46,7 +46,7 @@ export const handler = async (event) => {
 
     // Send email using Resend
     const result = await resend.emails.send({
-      from: 'Taxis <onboarding@resend.dev>',
+      from: 'Taxis <taxis@prometheasolutions.com.br>',
       to: [email],
       subject: 'Taxis - Your Login Code',
       html: `
